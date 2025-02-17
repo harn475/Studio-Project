@@ -5,12 +5,14 @@ let gameStarted = false;
 let boosts = [];
 let normalSpeed = 10;
 let boostedSpeed = 25; // More noticeable jump
-let boostDuration = 2000; 
+let boostDuration = 2000;
+let catfood; // Declare variable for cat food image
 
 function preload() {
   for (let i = 1; i <= 16; i++) {
     catImages.push(loadImage(`catdrawings/cat${i}.png`));
   }
+  catfood = loadImage("catfood.png"); // Load the cat food image
 }
 
 function setup() {
@@ -29,7 +31,7 @@ function draw() {
     image(player2.img, player2.x, player2.y, 50, 50);
   }
 
-  fill(255, 204, 0);
+  fill(188, 156, 86);
   for (let boost of boosts) {
     ellipse(boost.x, boost.y, 20, 20);
   }
@@ -45,6 +47,9 @@ function draw() {
     noLoop();
     alert("Player 2 Wins!");
   }
+
+  // Draw cat food at the finish line (right end of the canvas)
+  image(catfood, width - 160, height / 2 - 125, 200, 200);  // Placing cat food at the end
 }
 
 function keyPressed() {
