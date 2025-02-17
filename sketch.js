@@ -4,15 +4,20 @@ let selectingPlayer = 1;
 let gameStarted = false;
 let boosts = [];
 let normalSpeed = 10;
-let boostedSpeed = 25; // More noticeable jump
+let boostedSpeed = 25;
 let boostDuration = 2000;
-let catfood; // Declare variable for cat food image
+let catfood;
+let pawprint;
+let player1Pawprints = [];
+let player2Pawprints = [];
+let clickCount = 0;
 
 function preload() {
   for (let i = 1; i <= 16; i++) {
     catImages.push(loadImage(`catdrawings/cat${i}.png`));
   }
-  catfood = loadImage("catfood.png"); // Load the cat food image
+  catfood = loadImage("catfood.png");
+  pawprint = loadImage("pawprint.png");
 }
 
 function setup() {
@@ -29,6 +34,32 @@ function draw() {
   if (player1 && player2) {
     image(player1.img, player1.x, player1.y, 50, 50);
     image(player2.img, player2.x, player2.y, 50, 50);
+
+    // Draw pawprints for player 1
+    for (let i = 0; i < player1Pawprints.length; i++) {
+      let p = player1Pawprints[i];
+      let size = random(15, 25); 
+      let opacity = map(i, 0, player1Pawprints.length, 255, 50); 
+      push();
+      translate(p.x, p.y);
+      rotate(p.angle);
+      tint(255, opacity);
+      image(pawprint, -size / 2, -size / 2, size, size);
+      pop();
+    }
+
+    // Draw pawprints for player 2
+    for (let i = 0; i < player2Pawprints.length; i++) {
+      let p = player2Pawprints[i];
+      let size = random(15, 25); 
+      let opacity = map(i, 0, player2Pawprints.length, 255, 50); 
+      push();
+      translate(p.x, p.y);
+      rotate(p.angle);
+      tint(255, opacity);
+      image(pawprint, -size / 2, -size / 2, size, size);
+      pop();
+    }
   }
 
   fill(188, 156, 86);
@@ -48,8 +79,7 @@ function draw() {
     alert("Player 2 Wins!");
   }
 
-  // Draw cat food at the finish line (right end of the canvas)
-  image(catfood, width - 160, height / 2 - 125, 200, 200);  // Placing cat food at the end
+  image(catfood, width - 160, height / 2 - 125, 200, 200);
 }
 
 function keyPressed() {
@@ -58,15 +88,90 @@ function keyPressed() {
   let speed1 = player1.boostActive ? boostedSpeed : normalSpeed;
   let speed2 = player2.boostActive ? boostedSpeed : normalSpeed;
 
-  if (key === 'w') player1.y -= speed1;
-  if (key === 's') player1.y += speed1;
-  if (key === 'a') player1.x -= speed1;
-  if (key === 'd') player1.x += speed1;
+  if (key === 'w') {
+    player1.y -= speed1;
+    if (clickCount % 2 === 1) { 
+      // Pawprint behind player
+      player1Pawprints.push({
+        x: player1.x + 25, // Center of the player
+        y: player1.y + 25 + 25, // Offset behind player
+        angle: random(-PI / 4, PI / 4)
+      });
+    }
+  }
+  if (key === 's') {
+    player1.y += speed1;
+    if (clickCount % 2 === 1) { 
+      player1Pawprints.push({
+        x: player1.x + 25, // Center of the player
+        y: player1.y + 25 - 25, // Offset behind player
+        angle: random(-PI / 4, PI / 4)
+      });
+    }
+  }
+  if (key === 'a') {
+    player1.x -= speed1;
+    if (clickCount % 2 === 1) { 
+      player1Pawprints.push({
+        x: player1.x + 25 + 25, // Offset behind player
+        y: player1.y + 25, // Center of the player
+        angle: random(-PI / 4, PI / 4)
+      });
+    }
+  }
+  if (key === 'd') {
+    player1.x += speed1;
+    if (clickCount % 2 === 1) { 
+      player1Pawprints.push({
+        x: player1.x + 25 - 25, // Offset behind player
+        y: player1.y + 25, // Center of the player
+        angle: random(-PI / 4, PI / 4)
+      });
+    }
+  }
 
-  if (keyCode === UP_ARROW) player2.y -= speed2;
-  if (keyCode === DOWN_ARROW) player2.y += speed2;
-  if (keyCode === LEFT_ARROW) player2.x -= speed2;
-  if (keyCode === RIGHT_ARROW) player2.x += speed2;
+  if (keyCode === UP_ARROW) {
+    player2.y -= speed2;
+    if (clickCount % 2 === 1) { 
+      player2Pawprints.push({
+        x: player2.x + 25,
+        y: player2.y + 25 + 25,
+        angle: random(-PI / 4, PI / 4)
+      });
+    }
+  }
+  if (keyCode === DOWN_ARROW) {
+    player2.y += speed2;
+    if (clickCount % 2 === 1) { 
+      player2Pawprints.push({
+        x: player2.x + 25,
+        y: player2.y + 25 - 25,
+        angle: random(-PI / 4, PI / 4)
+      });
+    }
+  }
+  if (keyCode === LEFT_ARROW) {
+    player2.x -= speed2;
+    if (clickCount % 2 === 1) { 
+      player2Pawprints.push({
+        x: player2.x + 25 + 25,
+        y: player2.y + 25,
+        angle: random(-PI / 4, PI / 4)
+      });
+    }
+  }
+  if (keyCode === RIGHT_ARROW) {
+    player2.x += speed2;
+    if (clickCount % 2 === 1) { 
+      player2Pawprints.push({
+        x: player2.x + 25 - 25,
+        y: player2.y + 25,
+        angle: random(-PI / 4, PI / 4)
+      });
+    }
+  }
+
+  clickCount++; // Increase the click counter with each key press
 }
 
 function showMenu() {
