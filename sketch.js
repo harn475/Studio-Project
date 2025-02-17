@@ -27,9 +27,13 @@ function setup() {
 }
 
 function draw() {
+  
   if (!gameStarted) return;
 
-  background(220);
+  background(207, 253, 188);
+
+  text("Collect the boosts!", 50, 50, 50);
+
 
   if (player1 && player2) {
     image(player1.img, player1.x, player1.y, 50, 50);
@@ -226,7 +230,7 @@ function spawnBoost() {
 
   setTimeout(() => {
     boosts = boosts.filter(b => b !== newBoost);
-  }, 5000);
+  }, 6000);
 }
 
 function checkBoostCollision(player) {
