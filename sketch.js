@@ -35,7 +35,7 @@ function setup() {
   showMenu();
   setInterval(spawnBoost, 3000);
 
-  // Adjusted boundaries based on new positions and sizes
+  // tree boundaries
   catTreeBounds.push({ x: width * 0.3, y: height * 0.6, w: 200, h: 200 });  // Updated for tree 1
   catTreeBounds.push({ x: width * 0.2, y: height * 0.25, w: 150, h: 150 });  // Updated for tree 2
   catTreeBounds.push({ x: width * 0.6, y: height * 0.4, w: 150, h: 150 });  // Updated for tree 3
@@ -50,11 +50,17 @@ function draw() {
   image(cattree2, width * 0.2, height * 0.25, 150, 150);
   image(cattree3, width * 0.6, height * 0.4, 150, 150);
 
-  text("Collect the boosts!", 50, 50, 50);
+  text("Collect the boosts!", 150, 50, 50);
+  text("Avoid the obsticles!", 50, 50, 50);
+  text("Reach the food first!", 225, 50, 80);
 
   if (player1 && player2) {
     image(player1.img, player1.x, player1.y, 50, 50);
     image(player2.img, player2.x, player2.y, 50, 50);
+
+    // Check for the win condition
+    checkWin(player1);
+    checkWin(player2);
 
     // Draw pawprints for player 1
     for (let i = 0; i < player1Pawprints.length; i++) {
@@ -91,16 +97,21 @@ function draw() {
   checkBoostCollision(player1);
   checkBoostCollision(player2);
 
-  if (player1.x >= width - 50) {
-    noLoop();
-    alert("Player 1 Wins!");
-  }
-  if (player2.x >= width - 50) {
-    noLoop();
-    alert("Player 2 Wins!");
-  }
+  // Display catfood (the endpoint)
+  image(catfood, width * 0.90, height / 2 - 50, 50, 50);
+}
 
-  image(catfood, width * 0.80, height / 2 - 100, 200, 200);
+function checkWin(player) {
+  // Check if a player reaches the catfood
+  let catfoodX = width * 0.90;
+  let catfoodY = height / 2 - 50;
+  let catfoodWidth = 50;
+  let catfoodHeight = 50;
+
+  if (player.x >= catfoodX && player.x <= catfoodX + catfoodWidth && player.y >= catfoodY && player.y <= catfoodY + catfoodHeight) {
+    noLoop();
+    alert(`${player === player1 ? "Player 1" : "Player 2"} Wins!`);
+  }
 }
 
 function keyPressed() {
