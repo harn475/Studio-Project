@@ -15,7 +15,6 @@ let cattree4;
 let player1Pawprints = [];
 let player2Pawprints = [];
 let clickCount = 0;
-
 let catTreeBounds = [];  // This will hold the boundaries of each tree.
 
 function preload() {
